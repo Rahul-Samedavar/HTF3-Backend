@@ -1,0 +1,23 @@
+{
+  "name": "htf3-backend",
+  "version": "1.0.0",
+  "description": "this is the backend for Hack To Future Hackathon Hosted by KLS GIT in association with TCS",
+  "license": "MIT",
+  "author": "Rahul Samedavar",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
