@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
+import profileRoutes from "./routes/profile.js"
 
 
 dotenv.config();
@@ -16,10 +17,9 @@ app.get("/", (req, res) => {
 });
 
 
-app.use(
-  "/auth",
-  authRoutes
-);
+app.use("/auth", authRoutes);
+app.use("/profile", profileRoutes)
+
 
 const PORT = process.env.PORT || 5000;
 

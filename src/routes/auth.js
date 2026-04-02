@@ -2,12 +2,13 @@ import express from "express";
 
 
 import { createUser, getUserByEmail, resetPassword, verifyPassword} from "../database/users.js";
-import { signToken } from "../utils/jwt.js";
+import { signToken,prepareAuthPayload } from "../utils/jwt.js";
 
 const router = express.Router();
 
 
 // TODO: Yet to add otp
+
 router.post("/signup", async (req, res) => {
   try {
     const { email, password, username } = req.body;
@@ -26,17 +27,13 @@ router.post("/signup", async (req, res) => {
       return res.status(409).json({ success: false,  error: "Email ID taken" });
     }
 
-    const token = signToken({
-      userID : idx,
-      email: email,
-      username: username
-    })
+    const token = signToken(prepareAuthPayload(idx,  email, username ))
 
     return res.status(200).json({success: true, token: token});
 
   } catch (err) {
     console.error("signup failed", err);
-    return res.status(500).json({ success: false,  error: "Registration failed" });
+    return res.status(500).json({ success: false,  error: "Internal Server Error" });
   }
 });
 
@@ -53,11 +50,7 @@ router.post("/signin", async (req, res) => {
     if (!user || ! (await verifyPassword(password, user.password_hash))) 
        return res.status(401).json({success: false, error: "Invalid Credentials"})
 
-    const token = signToken({
-      userID : user.id,
-      email,
-      username: user.username
-    })
+    const token = signToken(prepareAuthPayload(user.id,  email, user.username))
 
     return res.status(200).json({success: true, message: "Login Success", token: token});
 

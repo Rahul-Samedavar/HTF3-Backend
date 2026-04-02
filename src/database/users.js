@@ -26,7 +26,6 @@ export async function createUser(email, password, username) {
     try {
         if (await getUserByEmail(email)) return -1;
         const hash_pass = await bcrypt.hash(password, 10);
-        
 
         const result = await pool.query(
             `INSERT INTO users (email, password_hash, username)
@@ -53,7 +52,8 @@ export async function getUserByEmail(email) {
 
     try {
         const result = await pool.query(
-            `SELECT * FROM users 
+            `SELECT *
+            FROM users 
             WHERE email= $1`
             ,
             [email]
@@ -68,11 +68,13 @@ export async function getUserByEmail(email) {
   }
 }
 
+
 // returns undefined if userNotFound
 export async function getUserByID(id) {
     try {
         const result = await pool.query(
-            `SELECT * FROM users 
+            `SELECT * 
+            FROM users 
             WHERE id= $1`
             ,
             [id]

@@ -28,3 +28,7 @@ export function verifyToken(token){
     };
   }
 };
+
+
+
+export const prepareAuthPayload = (userID, email, username) => ({ userID, email, username})
