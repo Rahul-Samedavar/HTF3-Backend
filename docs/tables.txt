@@ -1,0 +1,44 @@
+-- USERS
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    username TEXT NOT NULL,
+    phone TEXT,
+    gender TEXT,
+    location TEXT,
+    bio TEXT,
+    college TEXT,
+    department TEXT,
+    year INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- TEAMS
+CREATE TABLE teams (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    leader_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TEAM MEMBERS
+CREATE TABLE team_members (
+    id SERIAL PRIMARY KEY,
+    team_id INTEGER REFERENCES teams(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(team_id, user_id)
+);
+
+-- SUBMISSIONS
+CREATE TABLE submissions (
+    id SERIAL PRIMARY KEY,
+    team_id INTEGER REFERENCES teams(id) ON DELETE CASCADE,
+    track_id INTEGER CHECK (track_id BETWEEN 1 AND 3),
+    problem_statement_id INTEGER CHECK (problem_statement_id BETWEEN 1 AND 4),
+    ppt_drive_link TEXT,
+    idea_title TEXT NOT NULL,
+    description TEXT,
+    submitted_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
