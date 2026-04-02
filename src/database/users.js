@@ -21,6 +21,8 @@ import { pool } from "./db.js";
 // returns id if new created , -1 if email already taken
 export async function createUser(email, password, username) {
 
+    email = email.toLowerCase().trim();
+
     try {
         if (await getUserByEmail(email)) return -1;
         const hash_pass = await bcrypt.hash(password, 10);
@@ -46,6 +48,9 @@ export async function createUser(email, password, username) {
 
 // returns undefined is user not found
 export async function getUserByEmail(email) {
+
+    email = email.toLowerCase().trim();
+
     try {
         const result = await pool.query(
             `SELECT * FROM users 
@@ -83,15 +88,17 @@ export async function getUserByID(id) {
 }
 
 // returns true if password was updated
-export async function resetPassword(id, new_password) {
+export async function resetPassword(email, new_password) {
+
+    email = email.toLowerCase().trim();
     try {
         const hash_pass = await bcrypt.hash(new_password, 10);
 
         const result = await pool.query(
             `UPDATE users
              SET password_hash = $1
-             WHERE id = $2`,
-            [hash_pass, id]
+             WHERE email = $2`,
+            [hash_pass, email]
         );
 
         return result.rowCount === 1;
@@ -102,7 +109,7 @@ export async function resetPassword(id, new_password) {
 }
 
 
-export async function verifypassword(password, hash) {
+export async function verifyPassword(password, hash) {
     try {
         const match = await bcrypt.compare(password, hash);
         return match;
