@@ -43,7 +43,14 @@ CREATE TABLE submissions (
     submitted_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
+CREATE TABLE otp_verifications (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL,
+  otp_hash TEXT NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  attempts INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 Indexes:
 CREATE INDEX idx_team_members_user_id ON team_members(user_id);
