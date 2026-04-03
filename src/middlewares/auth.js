@@ -17,11 +17,11 @@ export const authenticate = (req, res, next) => {
 
   const data = verifyToken(token)
   if (!data.valid || ! typeof(data.decoded) == 'object') 
-    return res.status(400).json({ error: 'Unautherized' });
+    return res.status(401).json({ error: 'Unauthorized' });
 
   const { userID, email, username} = data.decoded
   if (!userID | !email | !username) 
-    return res.status(400).json({ error: 'Unautherized' });
+    return res.status(401).json({ error: 'Unauthorized' });
 
   req.auth = {userID, username, email}
   next()

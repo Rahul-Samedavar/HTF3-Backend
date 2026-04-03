@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import profileRoutes from "./routes/profile.js"
+import teamRoutes from "./routes/teams.js"
 
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes)
+app.use("/team", teamRoutes)
 
 
 const PORT = process.env.PORT || 5000;

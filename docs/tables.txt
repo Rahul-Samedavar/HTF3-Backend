@@ -42,3 +42,27 @@ CREATE TABLE submissions (
     description TEXT,
     submitted_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+Indexes:
+CREATE INDEX idx_team_members_user_id ON team_members(user_id);
+CREATE INDEX idx_team_members_team_id ON team_members(team_id);
+CREATE INDEX idx_teams_name_lower ON teams(LOWER(name));
+
+
+
+Trigger:
+CREATE FUNCTION check_team_size()
+RETURNS trigger AS $$
+BEGIN
+  IF (SELECT COUNT(*) FROM team_members WHERE team_id = NEW.team_id) >= 4 THEN
+    RAISE EXCEPTION 'Team is full';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER team_size_limit
+BEFORE INSERT ON team_members
+FOR EACH ROW EXECUTE FUNCTION check_team_size();
