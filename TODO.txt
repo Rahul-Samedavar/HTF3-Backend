@@ -1,0 +1,9 @@
+routes
+    1. Submission endpoints
+    2. Admin endpoints
+
+
+security:
+    1. OTP
+    2. Rate Limitting
+    3. DB constrains

@@ -1,7 +1,7 @@
 import express from "express";
 
 import { authenticate } from "../middlewares/auth.js";
-import { createTeam, getTeamOf, joinTeam, removeFromTeam } from "../database/teams.js";
+import { createTeam, getTeamDetails, getTeamOf, joinTeam, removeFromTeam } from "../database/teams.js";
 import { parseTeamCode } from "../utils/coder.js";
 
 const router = express.Router()
@@ -88,6 +88,25 @@ router.get(
             const team = await getTeamOf(req.auth.userID)
             if (team) res.status(200).json(team)
             else res.status(404).json({error: "Not in any Team"})
+        } catch (err) {
+            console.error("Failed to fetch Team", err);
+            return res.status(500).json({ success: false,  error: "Internal Server Error"});
+        }
+    }
+)
+
+
+router.get(
+    "/:teamCode",
+    authenticate,
+    async (req, res) => {
+        try {
+            const teamCode = req.params?.teamCode
+            if(!teamCode) res.status(404).json({error: "Team Code Missing"})
+            const teamID = parseTeamCode(teamCode.trim())
+            const team = await getTeamDetails(teamID)
+            if (team) res.status(200).json(team)
+            else res.status(404).json({error: "Not a valid team Code"})
         } catch (err) {
             console.error("Failed to fetch Team", err);
             return res.status(500).json({ success: false,  error: "Internal Server Error"});

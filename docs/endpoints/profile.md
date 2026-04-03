@@ -1,4 +1,16 @@
-1. /profile/data , method: Get
+all these endpoints require bearer token in headers. get it from login/signup.
+
+if no valid token is present. they will return this error:
+401 
+```
+{
+    "error": "Unauthorized" | 'Token missing' |  'Invalid auth header format'
+}
+```
+
+you should redirect users to login page, if these error msg is received. 
+
+## 1. /profile/data , method: Get
 requires bearer token in headers.
 
  - use this to fetch profile data.
@@ -37,7 +49,7 @@ requires bearer token in headers.
 
 ---
 
-#### 2. /profile/update , Method Post
+## 2. /profile/update , Method Post
 - Auth: Bearer Token required
 
 - Update user profile details.
@@ -58,7 +70,6 @@ requires bearer token in headers.
 ```
    - All fields are optional.
 
----
 
 - Success Response: 200
 ```json

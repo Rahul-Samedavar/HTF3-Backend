@@ -48,6 +48,25 @@ export async function createTeam(userID, teamName) {
       return {success: false, error:"Already in a Team"}
     }
 
+
+    const userRes = await client.query(
+      `SELECT * from users WHERE id = $1`,
+      [userID]
+    );
+
+
+    if (userRes.rows.length == 0) {
+      await client.query("ROLLBACK");
+      return {success: false, error:"Invalid User ID"}
+    }
+
+    const user = userRes.rows[0]
+
+    if (!user.phone || !user.gender || !user.location || !user.bio || !user.college || !user.department || !user.year) {
+      await client.query("ROLLBACK");
+      return {success: false, error:"Incomplete Profile"}
+    }
+
     const teamRes = await client.query(
       `INSERT INTO teams (name, leader_id) VALUES ($1, $2) RETURNING id`,
       [teamName, userID]
@@ -88,6 +107,26 @@ export async function joinTeam(userID, teamID) {
     if (teamRes.rows.length === 0) {
       await client.query("ROLLBACK");
       return {success: false, error: "Team Doesn't Exist"};
+    }
+
+
+
+    const userRes = await client.query(
+      `SELECT * from users WHERE id = $1`,
+      [userID]
+    );
+
+
+    if (userRes.rows.length == 0) {
+      await client.query("ROLLBACK");
+      return {success: false, error:"Invalid User ID"}
+    }
+
+    const user = userRes.rows[0]
+
+    if (!user.phone || !user.gender || !user.location || !user.bio || !user.college || !user.department || !user.year) {
+      await client.query("ROLLBACK");
+      return {success: false, error:"Incomplete Profile"}
     }
 
     const userCheck = await client.query(
