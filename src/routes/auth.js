@@ -3,23 +3,60 @@ import express from "express";
 
 import { createUser, getUserByEmail, resetPassword, verifyPassword} from "../database/users.js";
 import { signToken,prepareAuthPayload } from "../utils/jwt.js";
+import { generateOTP } from "../utils/otp.js";
+import { hashOTP } from "../utils/otp.js";
+import { sendOTP } from "../services/mailing.js";
+import { checkForPrevOTP, checkOTP, saveOTP } from "../database/otp.js";
 
 const router = express.Router();
 
 
 // TODO: Yet to add otp
 
+router.post("/signup/init", async (req, res) => {
+
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, error: "Email required" });
+    }
+
+    if (await getUserByEmail(email))
+      return res.status(400).json({ success: false, error: "Email Taken" });
+
+    if (await checkForPrevOTP(email))
+      return res.status(200).json({ success: true, error: "OTP already sent. Please check your email" });
+
+    const otp = generateOTP();
+    const otpHash = await hashOTP(otp);
+    
+    if (! await saveOTP(email, otpHash))
+      res.status(500).json({error: "Internal Server Error"})
+    await sendOTP(email, otp);
+
+    res.json({ success: true, message: "OTP sent" });
+  } catch (err) {
+    console.error("Failed to send OTP.", err)
+    res.status(500).json({ success: false, error: "Internal Srver Error" });
+  } 
+});
+
 router.post("/signup", async (req, res) => {
   try {
-    const { email, password, username } = req.body;
+    const { email, password, username, otp } = req.body;
 
-    if (!email || !password || !username) {
+    if (!email || !password || !username || !otp) {
       return res.status(400).json({ success: false, error: "Missing fields" });
     }
 
     if (password.length < 8) {
       return res.status(400).json({ success: false, error: "Weak password" });
     }
+
+    const otpRes = await checkOTP(email, otp);
+    if (!otpRes.success)
+      return res.status(400).json(otpRes);
 
     let idx = await createUser(email, password, username)
 

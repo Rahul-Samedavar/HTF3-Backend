@@ -8,3 +8,7 @@ export function generateOTP() {
 export async function hashOTP(otp) {
   return await bcrypt.hash(otp, 10);
 }
+
+export async function verifyOTP(otp, opt_hash) {
+  return await bcrypt.compare(otp, opt_hash);
+}

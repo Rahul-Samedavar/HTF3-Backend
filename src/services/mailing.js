@@ -15,4 +15,6 @@ export async function sendOTP(email, otp) {
     subject: "Your OTP",
     text: `Your OTP is ${otp}`,
   });
+
+  console.log("OTP: ", email, otp)
 }
