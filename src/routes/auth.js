@@ -7,10 +7,11 @@ import { generateOTP } from "../utils/otp.js";
 import { hashOTP } from "../utils/otp.js";
 import { sendOTP, sendOTPForResetPassoword } from "../services/mailing.js";
 import { checkForPrevOTP, checkOTP, saveOTP } from "../database/otp.js";
+import { authLimiter } from "../controllers/ratelimiter.js";
 
 const router = express.Router();
 
-router.post("/signup/init", async (req, res) => {
+router.post("/signup/init", authLimiter, async (req, res) => {
 
   try {
     const { email } = req.body;
@@ -39,7 +40,7 @@ router.post("/signup/init", async (req, res) => {
   } 
 });
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", authLimiter, async (req, res) => {
   try {
     const { email, password, username, otp } = req.body;
 
@@ -72,7 +73,7 @@ router.post("/signup", async (req, res) => {
 });
 
 
-router.post("/signin", async (req, res) => {
+router.post("/signin", authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -94,7 +95,7 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.post("/reset-password-init", async (req, res) => {
+router.post("/reset-password-init", authLimiter, async (req, res) => {
   try{
     const {email} = req.body;
 
@@ -125,7 +126,7 @@ router.post("/reset-password-init", async (req, res) => {
 });
 
 
-router.post("/reset-password", async (req, res) => {
+router.post("/reset-password", authLimiter, async (req, res) => {
   try{
     let {email, password, otp} = req.body;
 

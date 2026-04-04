@@ -40,8 +40,9 @@ router.post(
             } = req.body;
 
             const updatedUser = await updateDetails(
-                userID, phone, gender, location,
-                bio,college,department, year
+                userID,
+                {phone, gender, location,
+                bio,college,department, year}
             );
 
             delete updatedUser.password_hash;

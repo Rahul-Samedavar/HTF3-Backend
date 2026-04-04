@@ -123,20 +123,39 @@ export async function verifyPassword(password, hash) {
 
 // raises error If userNot Found
 // Otherwise it returns user object
-export async function updateDetails(id, phone, gender, location, bio, college, department, year) {
+export async function updateDetails(id, updates) {
     try {
         const userExists = await getUserByID(id);
         if (!userExists) {
             throw new Error(`User with ID ${id} not found.`);
         }
 
-        const result = await pool.query(
-            `UPDATE users
-             SET phone = $2, gender = $3, location = $4, bio = $5, college = $6, department = $7, year = $8
-             WHERE id = $1
-             RETURNING *`, 
-            [id, phone, gender, location, bio, college, department, year]
-        );
+        const fields = [];
+        const values = [];
+        let index = 1;
+
+        for (const [key, value] of Object.entries(updates)) {
+            if (value !== undefined && value !== "") {
+                fields.push(`${key} = $${index}`);
+                values.push(value);
+                index++;
+            }
+        }
+
+        if (fields.length === 0) {
+            throw new Error("No valid fields provided for update.");
+        }
+
+        const query = `
+            UPDATE users
+            SET ${fields.join(", ")}
+            WHERE id = $${index}
+            RETURNING *
+        `;
+
+        values.push(id);
+
+        const result = await pool.query(query, values);
 
         return result.rows[0];
     } catch (err) {
