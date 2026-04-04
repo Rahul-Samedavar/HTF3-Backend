@@ -18,3 +18,14 @@ export async function sendOTP(email, otp) {
 
   console.log("OTP: ", email, otp)
 }
+
+export async function sendOTPForResetPassoword(email, otp) {
+  await transporter.sendMail({
+    from: process.env.EMAIL,
+    to: email,
+    subject: "Your OTP",
+    text: `Your OTP for reset password is is ${otp}`,
+  });
+
+  console.log("OTP (reset passowrd): ", email, otp)
+}

@@ -1,12 +1,12 @@
 import { pool } from "./db.js";
 import { verifyOTP } from "../utils/otp.js";
 
-export async function saveOTP(email, otpHash) {
+export async function saveOTP(email, otpHash, lifespan=5) {
 
   const client = await pool.connect();
   try{
 
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + lifespan * 60 * 1000);
 
     await client.query(
       `INSERT INTO otp_verifications (email, otp_hash, expires_at)
