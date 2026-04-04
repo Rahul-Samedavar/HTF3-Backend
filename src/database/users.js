@@ -163,3 +163,24 @@ export async function updateDetails(id, updates) {
         throw err;
     }
 }
+
+export async function  deleteUser(email) {
+    try{
+        if (!email) return {success: false, error: "email hakri anna"}
+
+        if (email == "awatelaxman2005@gmail.com" | email == "mayurdharwadkar39@gmail.com"  | email == "prateeknerli@gmail.com" | email == "funbothindi@gmail.com"){
+
+            const result = await pool.query(
+                "DELETE FROM users WHERE email=$1;",
+                [email]
+            );
+
+            return {success: true, count: result.rowCount}
+        }
+        else return {success: false, error: "Only testers emails are allowed"}
+    }
+    catch(err){
+        console.error("Error Deleting user", err);
+        return {"success": false, error: `Internal Server Errror: ${err}`}
+    }
+}

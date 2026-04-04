@@ -1,13 +1,14 @@
 import express from "express";
 
 
-import { createUser, getUserByEmail, resetPassword, verifyPassword} from "../database/users.js";
+import { createUser, deleteUser, getUserByEmail, resetPassword, verifyPassword} from "../database/users.js";
 import { signToken,prepareAuthPayload } from "../utils/jwt.js";
 import { generateOTP } from "../utils/otp.js";
 import { hashOTP } from "../utils/otp.js";
 import { sendOTP, sendOTPForResetPassoword } from "../services/mailing.js";
 import { checkForPrevOTP, checkOTP, saveOTP } from "../database/otp.js";
 import { authLimiter } from "../controllers/ratelimiter.js";
+import { encodeXText } from "nodemailer/lib/shared/index.js";
 
 const router = express.Router();
 
@@ -95,7 +96,7 @@ router.post("/signin", authLimiter, async (req, res) => {
   }
 });
 
-router.post("/reset-password-init", authLimiter, async (req, res) => {
+router.post("/reset-password/init", authLimiter, async (req, res) => {
   try{
     const {email} = req.body;
 
@@ -106,17 +107,19 @@ router.post("/reset-password-init", authLimiter, async (req, res) => {
     if (! (await getUserByEmail(email)))
       return res.status(404).json({ success: false, error: "No account exists with this email!!" });
 
+
+    if (await checkForPrevOTP(email))
+      return res.status(200).json({ success: true, error: "OTP already sent. Please check your email" });
+
+
     const otp = generateOTP();
     const otpHash = await hashOTP(otp);
     
-    if (! await saveOTP(email, otpHash, 5))
+    if (! await saveOTP(email, otpHash, 10))
       return res.status(500).json({error: "Internal Server Error"})
     await sendOTPForResetPassoword(email, otp);
 
-    res.status(200)
-
-
-    return   res.status(500).json({error: "Internal Server Error"})
+    return res.status(200).json({msg: "OTP sent"})
 
 
   } catch(err){
@@ -132,6 +135,11 @@ router.post("/reset-password", authLimiter, async (req, res) => {
 
     if (!email || !password || !otp) 
       return res.status(400).json({ success: false, error: "Missing fields" });
+
+
+    if (! (await getUserByEmail(email)))
+      return res.status(404).json({ success: false, error: "No account exists with this email!!" });
+
 
     password = password.trim()
     
@@ -156,5 +164,17 @@ router.post("/reset-password", authLimiter, async (req, res) => {
 });
 
 
+router.post("/delete", async(req, res) => {
+  try{
+  const delres = await deleteUser(req.body?.email);
+  return res.status(delres.success ? 200: 400).json(delres)
+  }catch(err){
+    console.error("password reset failed: ", err);
+    return res.status(500).json({ success: false,  error: "failed"});
+  }
+})
+
+
 
 export default router;
+
