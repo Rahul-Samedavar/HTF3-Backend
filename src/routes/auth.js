@@ -7,8 +7,7 @@ import { generateOTP } from "../utils/otp.js";
 import { hashOTP } from "../utils/otp.js";
 import { sendOTP, sendOTPForResetPassoword } from "../services/mailing.js";
 import { checkForPrevOTP, checkOTP, saveOTP } from "../database/otp.js";
-import { authLimiter } from "../controllers/ratelimiter.js";
-import { encodeXText } from "nodemailer/lib/shared/index.js";
+import { authLimiter } from "../middlewares/ratelimiter.js";
 
 const router = express.Router();
 
@@ -32,7 +31,8 @@ router.post("/signup/init", authLimiter, async (req, res) => {
     
     if (! await saveOTP(email, otpHash, 5))
       return res.status(500).json({error: "Internal Server Error"})
-    await sendOTP(email, otp);
+    const sendResp = await sendOTP(email, otp);
+    if (!sendResp?.success) return res.status(500).json({error: "Couldn't send OTP. please try again later"})
 
     res.json({ success: true, message: "OTP sent" });
   } catch (err) {
@@ -117,7 +117,9 @@ router.post("/reset-password/init", authLimiter, async (req, res) => {
     
     if (! await saveOTP(email, otpHash, 10))
       return res.status(500).json({error: "Internal Server Error"})
-    await sendOTPForResetPassoword(email, otp);
+    const sendResp = await sendOTPForResetPassoword(email, otp);
+
+    if (!sendResp?.success) return res.status(500).json({error: "Couldn't send OTP. please try again later"})
 
     return res.status(200).json({msg: "OTP sent"})
 

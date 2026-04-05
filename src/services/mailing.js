@@ -9,23 +9,31 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendOTP(email, otp) {
-  await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: process.env.EMAIL,
     to: email,
     subject: "Your OTP",
     text: `Your OTP is ${otp}`,
   });
 
+  console.log(info)
+
   console.log("OTP: ", email, otp)
+
+
+  return {success: email == info.accepted[0]}
 }
 
 export async function sendOTPForResetPassoword(email, otp) {
-  await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: process.env.EMAIL,
     to: email,
     subject: "Your OTP",
     text: `Your OTP for reset password is is ${otp}`,
   });
+  console.log(info)
 
   console.log("OTP (reset passowrd): ", email, otp)
+
+  return {success: email == info.accepted[0]}
 }

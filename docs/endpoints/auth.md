@@ -276,9 +276,6 @@ NOTE: All this endpoints have rate limitter.
 
 
 
-
-
-
 ### 6. /auth/delete , method: POST
 - works only for testers emails
 - delete your email, so that you can use it to create new account.
