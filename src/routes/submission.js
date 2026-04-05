@@ -4,10 +4,11 @@ import express from "express";
 import { authenticate } from "../middlewares/auth.js";
 import { addSubmission, getSubmissions, updateSubmission } from "../database/submissions.js";
 import { getTeamOf } from "../database/teams.js";
+import { sublimitter } from "../middlewares/ratelimiter.js";
 
 const router = express.Router();
 
-router.post("/add", authenticate, async (req, res) => {
+router.post("/add", authenticate, sublimitter, async (req, res) => {
 
   try {
     const {track_id, ps_id, ppt_drive_link, demo_link, title, description} = req.body
@@ -48,7 +49,7 @@ router.get("/data", authenticate, async (req, res) => {
   } 
 });
 
-router.post("/update", authenticate, async (req, res) => {
+router.post("/update", authenticate, sublimitter, async (req, res) => {
 
   try {
     const {ppt_drive_link, demo_link, title, description} = req.body
@@ -58,7 +59,7 @@ router.post("/update", authenticate, async (req, res) => {
     if (!teamResp)
         return res.status(400).json({error: "User not in any Team"})
 
-    const subResp = await updateSubmission(teamResp.id, {ppt_drive_link, demo_link, title, description})
+    const subResp = await updateSubmission(teamResp.id, {ppt_drive_link, demo_link, idea_title: title, description})
 
     return res.status(subResp.success ? 200 : 400).json(subResp)
 

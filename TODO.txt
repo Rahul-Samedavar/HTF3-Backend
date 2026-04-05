@@ -4,6 +4,6 @@ routes
 
 
 security:
-    1. OTP
-    2. Rate Limitting
+    1. OTP - add good mailing service
+    2. Rate Limitting - check if imporvements required
     3. DB constrains

@@ -11,3 +11,15 @@ export const authLimiter = rateLimit({
     error: "Too many attempts. Try again later."
   }
 });
+
+export const sublimitter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  keyGenerator: (req) => {
+    return req.auth.userID || ipKeyGenerator(req);
+  },
+  message: {
+    success: false,
+    error: "Too many attempts. Try again later."
+  }
+});

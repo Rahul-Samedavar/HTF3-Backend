@@ -69,11 +69,11 @@ export async function addSubmission(team_id, track_id, problem_statement_id, ppt
         return { success: true, submission: rows[0] };
 
     } catch (err) {
-        console.error("Error saving submission..", err);
 
         if (err.code === "23505") {
             return { success: false, error: "Submission already exists for this team" };
         }
+        console.error("Error saving submission..", err);
 
         return { success: false, error: "internal server error" };
     }
