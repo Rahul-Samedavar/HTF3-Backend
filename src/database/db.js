@@ -24,9 +24,11 @@ export const pool = new Pool({
       },
 });
 
-// pool.on("connect", (client) => {
-//   client.query("SET search_path TO htf, public");
-// });
+pool.on("connect", (client) => {
+  client.query("SET search_path TO htf, public");
+});
 
-// const res = await pool.query("SHOW search_path");
-// console.log(res.rows);
+const res = await pool.query(`SELECT schemaname, tablename 
+FROM pg_tables 
+WHERE tablename = 'users';`);
+console.log(res.rows);g
