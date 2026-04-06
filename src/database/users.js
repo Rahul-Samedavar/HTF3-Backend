@@ -53,7 +53,7 @@ export async function getUserByEmail(email) {
     try {
         const result = await pool.query(
             `SELECT *
-            FROM htf.users 
+            FROM users 
             WHERE email= $1`
             ,
             [email]

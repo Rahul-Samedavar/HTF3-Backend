@@ -29,11 +29,12 @@ router.post("/signup/init", authLimiter, async (req, res) => {
     const otp = generateOTP();
     const otpHash = await hashOTP(otp);
     
-    if (! await saveOTP(email, otpHash, 5))
-      return res.status(500).json({error: "Internal Server Error"})
+
     const sendResp = await sendOTP(email, otp);
     if (!sendResp?.success) return res.status(500).json({error: "Couldn't send OTP. please try again later"})
 
+    if (! await saveOTP(email, otpHash, 5))
+      return res.status(500).json({error: "Internal Server Error"})
     res.json({ success: true, message: "OTP sent" });
   } catch (err) {
     console.error("Failed to send OTP.", err)
@@ -114,13 +115,14 @@ router.post("/reset-password/init", authLimiter, async (req, res) => {
 
     const otp = generateOTP();
     const otpHash = await hashOTP(otp);
-    
-    if (! await saveOTP(email, otpHash, 10))
-      return res.status(500).json({error: "Internal Server Error"})
+
+
     const sendResp = await sendOTPForResetPassoword(email, otp);
 
     if (!sendResp?.success) return res.status(500).json({error: "Couldn't send OTP. please try again later"})
-
+    
+    if (! await saveOTP(email, otpHash, 10))
+      return res.status(500).json({error: "Internal Server Error"})
     return res.status(200).json({msg: "OTP sent"})
 
 

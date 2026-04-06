@@ -4,7 +4,7 @@ import fs from 'fs';
 
 dotenv.config();
 
-const is_pord = process.env.PROD || false
+const id_prod = process.env.PROD || false
 
 const { Pool } = pkg;
 
@@ -13,7 +13,7 @@ export const pool = new Pool({
   connectionString: process.env.DATABASE_URL_MAIN || process.env.DATABASE_URL_MAIN ,
   
   ssl: 
-    is_pord ?
+    id_prod ?
       {
         rejectUnauthorized: false,
         ca: fs.readFileSync('./ca-certificate.crt')
@@ -24,11 +24,13 @@ export const pool = new Pool({
       },
 });
 
-pool.on("connect", (client) => {
-  client.query("SET search_path TO htf, public");
-});
+if (id_prod){
+  pool.on("connect", (client) => {
+    client.query("SET search_path TO htf, public");
+  });
 
-const res = await pool.query(`
-  SELECT current_database(), current_user, inet_server_addr();
-`);
-console.log(res.rows);
+  const res = await pool.query(`
+    SELECT current_database(), current_user, inet_server_addr();
+  `);
+  console.log(res.rows);
+}
