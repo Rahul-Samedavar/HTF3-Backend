@@ -47,7 +47,7 @@ const GSCRIPT_SECRET = process.env.GSCRIPT_SECRET;
 
 async function sendEmail(to, subject, text, html) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
     const res = await fetch(GSCRIPT_URL, {
