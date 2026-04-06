@@ -10,7 +10,7 @@ const { Pool } = pkg;
 
 
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_MAIN || process.env.DATABASE_URL_MAIN ,
   
   ssl: 
     is_pord ?
