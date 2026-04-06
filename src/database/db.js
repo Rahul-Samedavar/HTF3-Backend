@@ -31,4 +31,4 @@ pool.on("connect", (client) => {
 const res = await pool.query(`SELECT schemaname, tablename 
 FROM pg_tables 
 WHERE tablename = 'users';`);
-console.log(res.rows);g
+console.log(res.rows);
