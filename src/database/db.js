@@ -28,7 +28,7 @@ pool.on("connect", (client) => {
   client.query("SET search_path TO htf, public");
 });
 
-const res = await pool.query(`SELECT schemaname, tablename 
-FROM pg_tables 
-WHERE tablename = 'users';`);
+const res = await pool.query(`
+  SELECT current_database(), current_user, inet_server_addr();
+`);
 console.log(res.rows);
