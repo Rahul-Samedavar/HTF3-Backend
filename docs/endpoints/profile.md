@@ -30,6 +30,8 @@ requires bearer token in headers.
             "college": "ABC College",
             "department": "CSE",
             "year": 3,
+            "theme": "tanjiro",
+            "shirt_Size": "M",
             "created_at": "2026-04-02T08:45:40.021Z"
         }
     }
@@ -65,7 +67,9 @@ requires bearer token in headers.
   "bio": "CS student",
   "college": "ABC College",
   "department": "CSE",
-  "year": 3
+  "year": 3,
+  "shirt_size": "M",
+  "theme": "Zenitsu"
 }
 ```
    - All fields are optional.
