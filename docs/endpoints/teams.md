@@ -119,7 +119,9 @@ you should redirect users to login page, if these error msg is received.
             "email": "test@gmail.com",
             "college": "ABC College",
             "department": "CSE",
-            "year": 3
+            "year": 3,
+            "theme": "tanjiro",
+            "shirt_size": "M"
             }
         ]
     }
@@ -184,7 +186,9 @@ you should redirect users to login page, if these error msg is received.
             "email": "test@gmail.com",
             "college": "ABC College",
             "department": "CSE",
-            "year": 3
+            "year": 3,
+            "theme": "tanjiro",
+            "shirt_size": "M"
             }
         ]
     }
