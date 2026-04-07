@@ -11,6 +11,8 @@ CREATE TABLE users (
     college TEXT,
     department TEXT,
     year INTEGER,
+    shirt_size,
+    theme,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -38,6 +40,7 @@ CREATE TABLE submissions (
     track_id INTEGER CHECK (track_id BETWEEN 1 AND 3),
     problem_statement_id INTEGER CHECK (problem_statement_id BETWEEN 1 AND 4),
     ppt_drive_link TEXT,
+    demo_link TEXT
     idea_title TEXT NOT NULL,
     description TEXT,
     submitted_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
