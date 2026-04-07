@@ -13,9 +13,10 @@ import { pool } from "./db.js";
 //     college TEXT,
 //     department TEXT,
 //     year INTEGER,
+//     shirt_size,
+//     theme,
 //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 // );
-
 
 // this creates bare user without profile details. i mean signup
 // returns id if new created , -1 if email already taken

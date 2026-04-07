@@ -181,6 +181,8 @@ export async function getTeamDetails(teamID) {
         u.email,
         u.college,
         u.department,
+        u.theme,
+        u.shirt_size,
         u.year
 
      FROM teams t
@@ -206,7 +208,9 @@ export async function getTeamDetails(teamID) {
         email: r.email,
         college: r.college,
         department: r.department,
-        year: r.year
+        year: r.year,
+        theme: r.theme,
+        shirt_size: r.shirt_size,
       })),
   };
 
@@ -228,7 +232,9 @@ export async function getTeamOf(userID) {
         u.email,
         u.college,
         u.department,
-        u.year
+        u.year,
+        u.shirt_size,
+        u.theme
 
      FROM teams t
      JOIN team_members tm ON t.id = tm.team_id
@@ -253,7 +259,9 @@ export async function getTeamOf(userID) {
       email: r.email,
       college: r.college,
       department: r.department,
-      year: r.year
+      year: r.year,
+      theme: r.theme,
+      shirt_size: r.shirt_size
     })),
   };
 
