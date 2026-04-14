@@ -62,7 +62,7 @@ export async function createTeam(userID, teamName) {
 
     const user = userRes.rows[0]
 
-    if (!user.phone || !user.gender || !user.location || !user.bio || !user.college || !user.department || !user.year) {
+    if (!user.phone || !user.gender || !user.location  || !user.college || !user.department || !user.year) {
       await client.query("ROLLBACK");
       return {success: false, error:"Incomplete Profile"}
     }
