@@ -62,9 +62,9 @@ router.post(
 
         try {
 
-            if (!res.body) return res.status(400).json({error: "user ID missing"}) 
+            if (!req.body) return res.status(400).json({error: "user ID missing"}) 
 
-            const {targetID}  = res.body;
+            const {targetID}  = req.body;
             if (!targetID) return res.status(400).json({error: "user ID missing"}) 
 
             const teamResp = await removeFromTeam(targetID, req.auth.userID)
