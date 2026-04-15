@@ -62,7 +62,7 @@ router.post(
 
         try {
 
-            if (res.body) return res.status(400).json({error: "user ID missing"}) 
+            if (!res.body) return res.status(400).json({error: "user ID missing"}) 
 
             const {targetID}  = res.body;
             if (!targetID) return res.status(400).json({error: "user ID missing"}) 
