@@ -31,7 +31,7 @@ requires bearer token in headers.
             "department": "CSE",
             "year": 3,
             "theme": "tanjiro",
-            "shirt_Size": "M",
+            "shirt_size": "M",
             "created_at": "2026-04-02T08:45:40.021Z"
         }
     }

@@ -250,6 +250,7 @@ export async function getTeamOf(userID) {
   const team = {
     id: res.rows[0].team_id,
     name: res.rows[0].team_name,
+    user_id: userID,
     code: getTeamCode( res.rows[0].team_id),
     leader_id: res.rows[0].leader_id,
     created_at: res.rows[0].created_at,
