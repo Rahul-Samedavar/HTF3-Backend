@@ -70,7 +70,7 @@ router.post(
             const teamResp = await removeFromTeam(targetID, req.auth.userID)
         
             if (teamResp.success)
-                return res.status(200)
+                return res.status(200).json({success: true})
             else
                 return res.status(400).json(teamResp)
         }
