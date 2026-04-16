@@ -176,6 +176,8 @@ router.post("/delete", async(req, res) => {
     console.error("password reset failed: ", err);
     return res.status(500).json({ success: false,  error: "failed"});
   }
+
+  
 })
 
 

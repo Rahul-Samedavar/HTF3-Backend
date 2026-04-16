@@ -55,6 +55,19 @@ CREATE TABLE otp_verifications (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE admins (
+  id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL
+);
+
+INSER INTO admins(username, password_hash, role) values('rahul', 'somehash', 'super-admin')
+
+
+
+
+
 Indexes:
 CREATE INDEX idx_team_members_user_id ON team_members(user_id);
 CREATE INDEX idx_team_members_team_id ON team_members(team_id);
