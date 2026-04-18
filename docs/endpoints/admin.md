@@ -4,8 +4,8 @@
 - request body 
     ```
     {
-        "id": "xyz",
-        "password": "12345678",
+        "username": "adminn",
+        "password": "pass"
     }
     ```
 
@@ -15,11 +15,11 @@
     {
         "success": true,
         "message": "Login Success",
-        "token": "qweqq........."
+        "token": "................."
     }
     ```
-    - Save this token in cookies and send it in headers as bearer token.
-
+    - Save this token in cookies and send it in headers as admin token.
+`
  - fail reponse 1: 401 wrong email or password
     ```
     {

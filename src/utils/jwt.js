@@ -32,4 +32,4 @@ export function verifyToken(token){
 
 
 export const prepareAuthPayload = (userID, email, username) => ({ userID, email, username})
-export const prepareAdminAuthPayload = (id, username) => ({ id,username})
+export const prepareAdminAuthPayload = (adminId, username) => ({ adminId,username})

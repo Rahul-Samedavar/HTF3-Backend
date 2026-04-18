@@ -11,8 +11,8 @@ CREATE TABLE users (
     college TEXT,
     department TEXT,
     year INTEGER,
-    shirt_size,
-    theme,
+    shirt_size TEXT,
+    theme TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

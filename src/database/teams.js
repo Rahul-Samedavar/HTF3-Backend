@@ -23,13 +23,14 @@ async function getClient() {
 
 // returns  {success, error?, teamID?}
 export async function createTeam(userID, teamName) {
+  teamName = teamName.toUpperCase()
   const client = await getClient();
 
   try {
     await client.query("BEGIN");
 
     const nameCheck = await client.query(
-      `SELECT id FROM teams WHERE LOWER(name) = LOWER($1)`,
+      `SELECT id FROM teams WHERE name = $1`,
       [teamName]
     );
 

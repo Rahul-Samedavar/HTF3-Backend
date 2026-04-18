@@ -1,13 +1,15 @@
 import express from "express";
-import { getAdminByName } from "../database/admin";
-import { prepareAdminAuthPayload,verifyPassword } from "../utils/jwt";
-import { signToken } from "../utils/jwt";
-import router from "./teams";
+import { getAdminByName,getAllData,verifyPassword } from "../database/admin.js";
+import { prepareAdminAuthPayload,signToken } from "../utils/jwt.js";
+import { adminAuthLimiter,sublimitteradmin } from "../middlewares/ratelimiter.js";
+import { authenticateAdmin } from "../middlewares/adminAuth.js";
+
 
 const router = express.Router();
 
-router.post("/signin", authLimiter, async (req, res) => {
+router.post("/signin", adminAuthLimiter, async (req, res) => {
   try {
+    if (!req.body) return res.status(400).json({ success: false, error: "Missing fields" })
     const { username, password } = req.body;
 
     if (!username || !password) 
@@ -15,10 +17,12 @@ router.post("/signin", authLimiter, async (req, res) => {
 
     let admin = await getAdminByName(username)
 
-    if (!admin || ! (await verifyPassword(password.trim(), user.password_hash))) 
+    console.log("Admin", admin)
+
+    if (!admin || ! (await verifyPassword(password.trim(), admin.password_hash))) 
        return res.status(401).json({success: false, error: "Invalid Credentials"})
 
-    const token = signToken(prepareAdminAuthPayload(id, user.username), '6h')
+    const token = signToken(prepareAdminAuthPayload(admin.id, admin.username), '6h')
 
     return res.status(200).json({success: true, message: "Login Success", token: token});
 
@@ -28,6 +32,11 @@ router.post("/signin", authLimiter, async (req, res) => {
   }
 });
 
+
+router.get("/get-all-data",  authenticateAdmin, sublimitteradmin, async(req, res)=> {
+  const data = await getAllData();
+  return res.json({data})
+})
 
 export default router;
 
