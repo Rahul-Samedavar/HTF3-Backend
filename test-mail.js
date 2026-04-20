@@ -1,6 +1,3 @@
-import { loadEnvFile } from 'node:process';
-loadEnvFile(); 
-
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
