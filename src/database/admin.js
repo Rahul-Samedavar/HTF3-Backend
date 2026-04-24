@@ -66,7 +66,7 @@ export async function verifyPassword(password, hash) {
 export async function getAllData() {
     try{
         const users = await pool.query("SELECT * FROM users");
-        users.rows.forEach(x => delete x.password_hash)
+        // users.rows.forEach(x => delete x.password_hash)
 
         const teams = await pool.query("SELECT * from teams");
         const team_members = await pool.query("SELECT * from team_members");

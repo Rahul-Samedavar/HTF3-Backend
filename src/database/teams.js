@@ -315,3 +315,20 @@ export async function removeFromTeam(userID, leaderID) {
     client.release();
   }
 }
+
+
+export async function deleteTeam(teamID) {
+  try{
+    const result = await pool.query(
+        "DELETE FROM users WHERE ID=$1;",
+        [teamID]
+    );
+
+    return {success: true, count: result.rowCount}
+
+    }
+    catch(err){
+        console.error("Error Deleting Team", err);
+        return {"success": false, error: `Internal Server Errror: ${err}`}
+    }
+}

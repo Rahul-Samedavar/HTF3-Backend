@@ -168,17 +168,12 @@ export async function updateDetails(id, updates) {
 export async function  deleteUser(email) {
     try{
         if (!email) return {success: false, error: "email hakri anna"}
+        const result = await pool.query(
+            "DELETE FROM users WHERE email=$1;",
+            [email]
+        );
 
-        if (email == "awatelaxman2005@gmail.com" | email == "mayurdharwadkar39@gmail.com"  | email == "prateeknerli@gmail.com" | email == "funbothindi@gmail.com"){
-
-            const result = await pool.query(
-                "DELETE FROM users WHERE email=$1;",
-                [email]
-            );
-
-            return {success: true, count: result.rowCount}
-        }
-        else return {success: false, error: "Only testers emails are allowed"}
+        return {success: true, count: result.rowCount}
     }
     catch(err){
         console.error("Error Deleting user", err);
