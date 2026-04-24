@@ -15,9 +15,7 @@ export const authLimiter = rateLimit({
 export const adminAuthLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   max: 7,
-  keyGenerator: (req) => {
-    return req.body?.username || ipKeyGenerator(req);
-  },
+  keyGenerator: (req) => { return req.body?.username || ipKeyGenerator(req);},
   message: {
     success: false,
     error: "Too many attempts. Try again later."

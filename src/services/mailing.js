@@ -39,18 +39,27 @@
 // }
 
 
+
+
 import fetch from "node-fetch";
 import { resetPasswordTemplate, signupOTPTemplate } from "../utils/templates.js";
 
 const GSCRIPT_URL = process.env.GSCRIPT_URL;
+const GSCRIPT_URL1 = process.env.GSCRIPT_URL1 || GSCRIPT_URL;
+const GSCRIPT_URL2 = process.env.GSCRIPT_URL2 || GSCRIPT_URL;
+
+const GS_URLS = [GSCRIPT_URL, GSCRIPT_URL1, GSCRIPT_URL2 ];
+var indx = 0;
+
 const GSCRIPT_SECRET = process.env.GSCRIPT_SECRET;
 
 async function sendEmail(to, subject, text, html) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
+  indx = (indx+1) % 3
   try {
-    const res = await fetch(GSCRIPT_URL, {
+    const res = await fetch(GS_URLS[indx], {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
