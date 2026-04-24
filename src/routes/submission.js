@@ -70,7 +70,25 @@ router.post("/update", authenticate, sublimitter, async (req, res) => {
 });
 
 
+export async function deleteSubmission(teamID) {
+  try{
+    const result = await pool.query(
+        "DELETE FROM users WHERE  team_id =$1;",
+        [teamID]
+    );
+
+    return {success: true, count: result.rowCount}
+
+    }
+    catch(err){
+        console.error("Error Deleting Submission", err);
+        return {"success": false, error: `Internal Server Errror: ${err}`}
+    }
+}
+
 
 
 
 export default router;
+
+

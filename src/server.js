@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.js";
 import profileRoutes from "./routes/profile.js"
 import teamRoutes from "./routes/teams.js"
 import submissionRoutes from "./routes/submission.js"
+import adminRoutes from "./routes/admin.js"
 
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes)
 app.use("/team", teamRoutes)
 app.use("/submissions", submissionRoutes)
+app.use("/admin", adminRoutes)
 
 
 const PORT = process.env.PORT || 5000;

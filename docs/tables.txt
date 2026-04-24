@@ -11,8 +11,8 @@ CREATE TABLE users (
     college TEXT,
     department TEXT,
     year INTEGER,
-    shirt_size,
-    theme,
+    shirt_size TEXT,
+    theme TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -54,6 +54,19 @@ CREATE TABLE otp_verifications (
   attempts INTEGER DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE admins (
+  id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL
+);
+
+INSER INTO admins(username, password_hash, role) values('rahul', 'somehash', 'super-admin')
+
+
+
+
 
 Indexes:
 CREATE INDEX idx_team_members_user_id ON team_members(user_id);

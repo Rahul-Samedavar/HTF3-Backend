@@ -168,15 +168,17 @@ router.post("/reset-password", authLimiter, async (req, res) => {
 });
 
 
-router.post("/delete", async(req, res) => {
-  try{
-  const delres = await deleteUser(req.body?.email);
-  return res.status(delres.success ? 200: 400).json(delres)
-  }catch(err){
-    console.error("password reset failed: ", err);
-    return res.status(500).json({ success: false,  error: "failed"});
-  }
-})
+// router.post("/delete", async(req, res) => {
+//   try{
+//   const delres = await deleteUser(req.body?.email);
+//   return res.status(delres.success ? 200: 400).json(delres)
+//   }catch(err){
+//     console.error("password reset failed: ", err);
+//     return res.status(500).json({ success: false,  error: "failed"});
+//   }
+
+  
+// })
 
 
 

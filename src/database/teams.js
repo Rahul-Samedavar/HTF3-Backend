@@ -23,13 +23,14 @@ async function getClient() {
 
 // returns  {success, error?, teamID?}
 export async function createTeam(userID, teamName) {
+  teamName = teamName.toUpperCase()
   const client = await getClient();
 
   try {
     await client.query("BEGIN");
 
     const nameCheck = await client.query(
-      `SELECT id FROM teams WHERE LOWER(name) = LOWER($1)`,
+      `SELECT id FROM teams WHERE name = $1`,
       [teamName]
     );
 
@@ -313,4 +314,21 @@ export async function removeFromTeam(userID, leaderID) {
   } finally {
     client.release();
   }
+}
+
+
+export async function deleteTeam(teamID) {
+  try{
+    const result = await pool.query(
+        "DELETE FROM users WHERE ID=$1;",
+        [teamID]
+    );
+
+    return {success: true, count: result.rowCount}
+
+    }
+    catch(err){
+        console.error("Error Deleting Team", err);
+        return {"success": false, error: `Internal Server Errror: ${err}`}
+    }
 }
