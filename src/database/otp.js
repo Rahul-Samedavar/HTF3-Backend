@@ -93,3 +93,29 @@ export async function checkForPrevOTP(email) {
     throw err
   }
 }
+
+
+// CREATE TABLE otp_verifications (
+//   id SERIAL PRIMARY KEY,
+//   email TEXT NOT NULL,
+//   otp_hash TEXT NOT NULL,
+//   expires_at TIMESTAMP NOT NULL,
+//   attempts INTEGER DEFAULT 0,
+//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// );
+
+
+
+export async function deleteOTP(email) {
+  try{
+    await pool.query(
+      `DELETE FROM otp_verifications
+      WHERE email = $1`,
+      [email]
+    );
+
+  } catch(err){
+    console.error("Error deleting for prev otp", err)
+    throw err
+  }
+}

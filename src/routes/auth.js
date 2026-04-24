@@ -6,7 +6,7 @@ import { signToken,prepareAuthPayload } from "../utils/jwt.js";
 import { generateOTP } from "../utils/otp.js";
 import { hashOTP } from "../utils/otp.js";
 import { sendOTP, sendOTPForResetPassoword } from "../services/mailing.js";
-import { checkForPrevOTP, checkOTP, saveOTP } from "../database/otp.js";
+import { checkForPrevOTP, checkOTP, deleteOTP, saveOTP } from "../database/otp.js";
 import { authLimiter } from "../middlewares/ratelimiter.js";
 
 const router = express.Router();
@@ -63,6 +63,8 @@ router.post("/signup", authLimiter, async (req, res) => {
     if (idx == -1){
       return res.status(409).json({ success: false,  error: "Email ID taken" });
     }
+
+    await deleteOTP(email);
 
     const token = signToken(prepareAuthPayload(idx,  email, username ))
 
@@ -156,6 +158,7 @@ router.post("/reset-password", authLimiter, async (req, res) => {
       return res.status(400).json(otpRes);
 
     if (await resetPassword(email, password)){
+      await deleteOTP(email);
       return res.status(200).json({success: true})
     }
 
