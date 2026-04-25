@@ -21,6 +21,9 @@ router.post("/add", authenticate, sublimitter, async (req, res) => {
     if (!teamResp)
         return res.status(400).json({error: "User not in any Team"})
 
+    if (teamResp.members.length < 3)
+      return res.status(400).json({error: "Team not full. You need atleast 3 members in your team to submit."})
+
     const subResp = await addSubmission(teamResp.id, track_id, ps_id, ppt_drive_link, demo_link, title, description)
 
     return res.status(subResp.success ? 200 : 400).json(subResp)

@@ -65,7 +65,7 @@ export async function createTeam(userID, teamName) {
 
     if (!user.phone || !user.gender || !user.location  || !user.college || !user.department || !user.year) {
       await client.query("ROLLBACK");
-      return {success: false, error:"Incomplete Profile"}
+      return {success: false, error:"Incomplete Profile. Update profile with all details."}
     }
 
     const teamRes = await client.query(
@@ -127,7 +127,7 @@ export async function joinTeam(userID, teamID) {
 
     if (!user.phone || !user.gender || !user.location || !user.bio || !user.college || !user.department || !user.year) {
       await client.query("ROLLBACK");
-      return {success: false, error:"Incomplete Profile"}
+      return {success: false, error:"Incomplete Profile. Update profile with all details."}
     }
 
     const userCheck = await client.query(
