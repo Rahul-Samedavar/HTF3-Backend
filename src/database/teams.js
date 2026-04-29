@@ -320,7 +320,7 @@ export async function removeFromTeam(userID, leaderID) {
 export async function deleteTeam(teamID) {
   try{
     const result = await pool.query(
-        "DELETE FROM users WHERE ID=$1;",
+        "DELETE FROM teams WHERE id=$1;",
         [teamID]
     );
 

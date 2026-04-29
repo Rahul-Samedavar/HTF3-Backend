@@ -11,9 +11,9 @@ const router = express.Router();
 router.post("/add", authenticate, sublimitter, async (req, res) => {
 
   try {
-    const {track_id, ps_id, ppt_drive_link, demo_link, title, description} = req.body
-
-    if (!track_id || !ps_id || !ppt_drive_link || !demo_link || !title || !description)
+    const {track_id, ps_id, ppt_drive_link, demo_link, title, description} = req.body;
+    
+    if (!track_id || !ps_id || !ppt_drive_link || !title || !description)
         return res.status(400).json({error: "Missing Feilds"})
     
     const teamResp = await getTeamOf(req.auth.userID)
@@ -33,6 +33,7 @@ router.post("/add", authenticate, sublimitter, async (req, res) => {
     res.status(500).json({ success: false, error: "Internal Srver Error" });
   } 
 });
+
 
 
 router.get("/data", authenticate, async (req, res) => {
@@ -73,25 +74,4 @@ router.post("/update", authenticate, sublimitter, async (req, res) => {
 });
 
 
-export async function deleteSubmission(teamID) {
-  try{
-    const result = await pool.query(
-        "DELETE FROM users WHERE  team_id =$1;",
-        [teamID]
-    );
-
-    return {success: true, count: result.rowCount}
-
-    }
-    catch(err){
-        console.error("Error Deleting Submission", err);
-        return {"success": false, error: `Internal Server Errror: ${err}`}
-    }
-}
-
-
-
-
 export default router;
-
-

@@ -5,8 +5,7 @@ import { adminAuthLimiter,sublimitteradmin } from "../middlewares/ratelimiter.js
 import { authenticateAdmin } from "../middlewares/adminAuth.js";
 import { deleteUser } from "../database/users.js";
 import { deleteTeam } from "../database/teams.js";
-import { deleteSubmission } from "./submission.js";
-
+import { deleteSubmission } from "../database/submissions.js";
 
 const router = express.Router();
 

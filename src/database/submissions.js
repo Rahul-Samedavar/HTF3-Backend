@@ -47,6 +47,13 @@ import { pool } from "./db.js";
 
 export async function addSubmission(team_id, track_id, problem_statement_id, ppt_drive_link, demo_link, idea_title, description) {
     try {
+
+
+        if (!demo_link) demo_link = "not uploaded";
+
+        if (track_id < 1 || track_id > 3)  return { success: false, error: "Invalid track"};
+        if (problem_statement_id < 1 || problem_statement_id > 4)  return { success: false, error: "Invalid problem statement"};
+
         const query = `
             INSERT INTO submissions 
             (team_id, track_id, problem_statement_id, ppt_drive_link, demo_link, idea_title, description)
@@ -165,3 +172,24 @@ export async function getAllSubmissions() {
         return { success: false, error: "internal server error" };
     }
 }
+
+
+
+
+export async function deleteSubmission(teamID) {
+  try{
+    const result = await pool.query(
+        "DELETE FROM submissions WHERE  team_id =$1;",
+        [teamID]
+    );
+
+    return {success: true, count: result.rowCount}
+
+    }
+    catch(err){
+        console.error("Error Deleting Submission", err);
+        return {"success": false, error: `Internal Server Errror: ${err}`}
+    }
+}
+
+
