@@ -11,6 +11,7 @@ const router = express.Router();
 router.post("/add", authenticate, sublimitter, async (req, res) => {
 
   try {
+    return res.status(400).json({ success: false, error: "Sorry, we are no longer accepting submissions!!" })
     const {track_id, ps_id, ppt_drive_link, demo_link, title, description} = req.body;
     
     if (!track_id || !ps_id || !ppt_drive_link || !title || !description)
@@ -39,6 +40,7 @@ router.post("/add", authenticate, sublimitter, async (req, res) => {
 router.get("/data", authenticate, async (req, res) => {
 
   try {
+    return res.status(400).json({ success: false, error: "Sorry, we are no longer accepting submissions!!" })
     const teamResp = await getTeamOf(req.auth.userID)
 
     if (!teamResp)

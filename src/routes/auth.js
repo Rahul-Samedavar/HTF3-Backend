@@ -14,6 +14,7 @@ const router = express.Router();
 router.post("/signup/init", authLimiter, async (req, res) => {
 
   try {
+    return res.status(500).json({error: "Sorry, we are no longer accepting new registrations!!"})
     const { email } = req.body;
 
     if (!email) {
@@ -44,6 +45,7 @@ router.post("/signup/init", authLimiter, async (req, res) => {
 
 router.post("/signup", authLimiter, async (req, res) => {
   try {
+    return res.status(500).json({error: "Sorry, we are no longer accepting new registrations!!"})
     const { email, password, username, otp } = req.body;
 
     if (!email || !password || !username || !otp) {
@@ -79,6 +81,7 @@ router.post("/signup", authLimiter, async (req, res) => {
 
 router.post("/signin", authLimiter, async (req, res) => {
   try {
+
     const { email, password } = req.body;
 
     if (!email || !password) 
