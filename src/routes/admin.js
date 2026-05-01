@@ -1,11 +1,11 @@
 import express from "express";
-import { getAdminByID, getAdminByName,getAllData,verifyPassword } from "../database/admin.js";
+import { getAdminByID, getAdminByName,getAllData,updateCollegesBulk,verifyPassword } from "../database/admin.js";
 import { prepareAdminAuthPayload,signToken } from "../utils/jwt.js";
 import { adminAuthLimiter,sublimitteradmin } from "../middlewares/ratelimiter.js";
 import { authenticateAdmin } from "../middlewares/adminAuth.js";
 import { deleteUser } from "../database/users.js";
 import { deleteTeam } from "../database/teams.js";
-import { deleteSubmission, updateCollege } from "../database/submissions.js";
+import { deleteSubmission } from "../database/submissions.js";
 
 const router = express.Router();
 
@@ -104,24 +104,39 @@ router.post("/delete-submission", authenticateAdmin, async (req, res)=> {
   }
 });
 
-router.post("/update-college", authenticateAdmin, async (req, res)=> {
+router.post("/update-colleges", authenticateAdmin, async (req, res) => {
   try {
     const admin = await getAdminByID(req.auth.adminId);
 
-    if (admin?.role != "super-admin")
-        return res.status(401).json({error: "Unauthorized"});
+    if (admin?.role !== "super-admin") {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
-    const userID = req.body?.userID;
-    const clgName = req.body?.clgName;
-    if (!userID || !clgName) return req.status(400).json({error: "Missing Feilds"});
+    const updates = req.body?.updates;
 
-    const update_res = await updateCollege(userID, clgName);
-    return res.status(update_res.success ? 200: 400).json(update_res)
+    if (!Array.isArray(updates) || updates.length === 0) {
+      return res.status(400).json({ error: "Invalid input" });
+    }
 
-  }
-  catch (err) {
-    console.error("college name updated failed", err);
-    return res.status(500).json({ success: false,  error: "Update Failed"});
+    // Validate each entry
+    for (const u of updates) {
+      if (!u.userID || isNaN(u.userID) || !u.clgName?.trim()) {
+        return res.status(400).json({ error: "Invalid update payload" });
+      }
+    }
+
+    const result = await updateCollegesBulk(updates);
+
+    return res
+      .status(result.success ? 200 : 400)
+      .json(result);
+
+  } catch (err) {
+    console.error("Bulk update route failed", err);
+    return res.status(500).json({
+      success: false,
+      error: "Update Failed"
+    });
   }
 });
 

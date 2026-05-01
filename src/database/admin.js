@@ -86,3 +86,39 @@ export async function getAllData() {
         return {"success": false, error: `Internal Server Errror: ${err}`}
     }
 }
+
+export async function updateCollegesBulk(updates) {
+  try {
+    if (!updates.length) {
+      return { success: false, error: "No updates provided" };
+    }
+
+    // Build VALUES list dynamically
+    const values = [];
+    const params = [];
+
+    updates.forEach((item, index) => {
+      const i = index * 2;
+      values.push(`($${i + 1}, $${i + 2})`);
+      params.push(item.userID, item.clgName);
+    });
+
+    const query = `
+      UPDATE users u
+      SET college = v.college
+      FROM (VALUES ${values.join(",")}) AS v(id, college)
+      WHERE u.id = v.id
+    `;
+
+    const result = await pool.query(query, params);
+
+    return {
+      success: true,
+      updatedCount: result.rowCount
+    };
+
+  } catch (err) {
+    console.error("Bulk college update failed", err);
+    return { success: false, error: "Internal Server Error" };
+  }
+}
