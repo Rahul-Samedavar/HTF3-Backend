@@ -106,7 +106,9 @@ export async function updateCollegesBulk(updates) {
     const query = `
       UPDATE users u
       SET college = v.college
-      FROM (VALUES ${values.join(",")}) AS v(id, college)
+      FROM (
+        VALUES ${values.join(",")}
+      ) AS v(id INTEGER, college TEXT)
       WHERE u.id = v.id
     `;
 

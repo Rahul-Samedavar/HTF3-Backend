@@ -103,7 +103,7 @@ router.post("/delete-submission", authenticateAdmin, async (req, res)=> {
     return res.status(500).json({ success: false,  error: "Delete Failed"});
   }
 });
-
+d
 router.post("/update-colleges", authenticateAdmin, async (req, res) => {
   try {
     const admin = await getAdminByID(req.auth.adminId);
