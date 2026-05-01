@@ -5,7 +5,7 @@ import { adminAuthLimiter,sublimitteradmin } from "../middlewares/ratelimiter.js
 import { authenticateAdmin } from "../middlewares/adminAuth.js";
 import { deleteUser } from "../database/users.js";
 import { deleteTeam } from "../database/teams.js";
-import { deleteSubmission } from "../database/submissions.js";
+import { deleteSubmission, updateCollege } from "../database/submissions.js";
 
 const router = express.Router();
 
@@ -44,10 +44,10 @@ router.get("/get-all-data",  authenticateAdmin, sublimitteradmin, async(req, res
 
 router.post("/delete-users", authenticateAdmin, async (req, res)=> {
   try {
-    const admin = getAdminByID(req.auth.adminId);
+    const admin = await getAdminByID(req.auth.adminId);
 
     if (admin?.role != "super-admin")
-        return req.status(401).json({error: "Unauthorized"});
+        return res.status(401).json({error: "Unauthorized"});
 
     const target_email = req.body?.email;
     if (!target_email) return req.status(400).json({error: "Missing Feilds"});
@@ -65,10 +65,10 @@ router.post("/delete-users", authenticateAdmin, async (req, res)=> {
 
 router.post("/delete-team", authenticateAdmin, async (req, res)=> {
   try {
-    const admin = getAdminByID(req.auth.adminId);
+    const admin = await getAdminByID(req.auth.adminId);
 
     if (admin?.role != "super-admin")
-        return req.status(401).json({error: "Unauthorized"});
+        return res.status(401).json({error: "Unauthorized"});
 
     const teamID = req.body?.teamID;
     if (!teamID) return req.status(400).json({error: "Missing Feilds"});
@@ -86,10 +86,10 @@ router.post("/delete-team", authenticateAdmin, async (req, res)=> {
 
 router.post("/delete-submission", authenticateAdmin, async (req, res)=> {
   try {
-    const admin = getAdminByID(req.auth.adminId);
+    const admin = await getAdminByID(req.auth.adminId);
 
     if (admin?.role != "super-admin")
-        return req.status(401).json({error: "Unauthorized"});
+        return res.status(401).json({error: "Unauthorized"});
 
     const teamID = req.body?.teamID;
     if (!teamID) return req.status(400).json({error: "Missing Feilds"});
@@ -101,6 +101,27 @@ router.post("/delete-submission", authenticateAdmin, async (req, res)=> {
   catch (err) {
     console.error("delete submission failed", err);
     return res.status(500).json({ success: false,  error: "Delete Failed"});
+  }
+});
+
+router.post("/update-college", authenticateAdmin, async (req, res)=> {
+  try {
+    const admin = await getAdminByID(req.auth.adminId);
+
+    if (admin?.role != "super-admin")
+        return res.status(401).json({error: "Unauthorized"});
+
+    const userID = req.body?.userID;
+    const clgName = req.body?.clgName;
+    if (!userID || !clgName) return req.status(400).json({error: "Missing Feilds"});
+
+    const update_res = await updateCollege(userID, clgName);
+    return res.status(update_res.success ? 200: 400).json(update_res)
+
+  }
+  catch (err) {
+    console.error("college name updated failed", err);
+    return res.status(500).json({ success: false,  error: "Update Failed"});
   }
 });
 

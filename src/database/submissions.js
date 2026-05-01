@@ -211,3 +211,24 @@ export async function deleteSubmission(teamID) {
 }
 
 
+
+
+
+
+export async function updateCollege(userID, clg) {
+  try{
+    const result = await pool.query(
+        "UPDATE USERS SET college=$1 where id=$2;",
+        [clg, userID]
+    );
+
+    return {success: true, count: result.rowCount}
+
+    }
+    catch(err){
+        console.error("Error Updating  College", err);
+        return {"success": false, error: `Internal Server Errror: ${err}`}
+    }
+}
+
+

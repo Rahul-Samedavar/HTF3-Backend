@@ -58,7 +58,7 @@ router.post("/update", authenticate, sublimitter, async (req, res) => {
 
   try {
     return res.status(400).json({ success: false, error: "Sorry, we are no longer accepting submissions!!" })
-
+    
     const {ppt_drive_link, demo_link, title, description} = req.body
 
     const teamResp = await getTeamOf(req.auth.userID)
