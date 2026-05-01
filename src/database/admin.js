@@ -99,7 +99,7 @@ export async function updateCollegesBulk(updates) {
 
     updates.forEach((item, index) => {
       const i = index * 2;
-      values.push(`($${i + 1}, $${i + 2})`);
+      values.push(`($${i + 1}::int, $${i + 2}::text)`);
       params.push(item.userID, item.clgName);
     });
 
@@ -108,7 +108,7 @@ export async function updateCollegesBulk(updates) {
       SET college = v.college
       FROM (
         VALUES ${values.join(",")}
-      ) AS v(id INTEGER, college TEXT)
+      ) AS v(id, college)
       WHERE u.id = v.id
     `;
 
