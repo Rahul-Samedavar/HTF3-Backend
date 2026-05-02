@@ -35,7 +35,7 @@ router.post(
             const userID = req.auth.userID;
 
             const {
-                phone, gender, location, bio, college, department, year, shirt_size, theme
+                phone, gender, location, bio, department, year, shirt_size, theme
             } = req.body;
 
             const updatedUser = await updateDetails(
