@@ -1,5 +1,5 @@
 import express from "express";
-import { getAdminByID, getAdminByName,getAllData,updateCollegesBulk,verifyPassword } from "../database/admin.js";
+import { getAdminByID, getAdminByName,getAllData,markTeamStatus,updateCollegesBulk,verifyPassword } from "../database/admin.js";
 import { prepareAdminAuthPayload,signToken } from "../utils/jwt.js";
 import { adminAuthLimiter,sublimitteradmin } from "../middlewares/ratelimiter.js";
 import { authenticateAdmin } from "../middlewares/adminAuth.js";
@@ -26,7 +26,7 @@ router.post("/signin", adminAuthLimiter, async (req, res) => {
 
     const token = signToken(prepareAdminAuthPayload(admin.id, admin.username), '6h')
 
-    return res.status(200).json({success: true, message: "Login Success", token: token});
+    return res.status(200).json({success: true, message: "Login Success", role: admin.role, token: token});
 
   } catch (err) {
     console.error("login failed", err);
@@ -137,6 +137,25 @@ router.post("/update-colleges", authenticateAdmin, async (req, res) => {
       success: false,
       error: "Update Failed"
     });
+  }
+});
+
+router.post("/update-team-status", authenticateAdmin, async (req, res)=> {
+  try {
+    const admin = await getAdminByID(req.auth.adminId);
+
+    if (admin?.role != "super-admin")
+        return res.status(401).json({error: "Unauthorized"});
+
+    const {teamID, status} = req.body;
+    if (!teamID || !status) return req.status(400).json({error: "Missing Feilds"});
+    const updRes = await markTeamStatus(teamID, status);
+    return res.status(updRes.success ? 200: 400).json(updRes)
+
+  }
+  catch (err) {
+    console.error("team status mark failed", err);
+    return res.status(500).json({ success: false,  error: "Update Failed"});
   }
 });
 

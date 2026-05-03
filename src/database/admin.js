@@ -124,3 +124,23 @@ export async function updateCollegesBulk(updates) {
     return { success: false, error: "Internal Server Error" };
   }
 }
+
+export async function markTeamStatus(team_id, status) {  try {
+
+    const result = await pool.query(
+      `UPDATE teams
+      SET status = $1
+      where id = $2
+      `, [status, team_id]);
+    
+    return {
+      success: true,
+      updatedCount: result.rowCount
+    };
+
+  } catch (err) {
+    console.error("team status update failed", err);
+    return { success: false, error: "Internal Server Error" };
+  }
+  
+}
