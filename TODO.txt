@@ -1,9 +1,0 @@
-routes
-    1. Submission endpoints
-    2. Admin endpoints
-
-
-security:
-    1. OTP - add good mailing service
-    2. Rate Limitting - check if imporvements required
-    3. DB constrains
